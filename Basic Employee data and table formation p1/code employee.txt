@@ -1,0 +1,53 @@
+*&---------------------------------------------------------------------*
+*& Report ZP1_EMPLOYEE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zp1_employee.
+
+TYPES : BEGIN OF TY_Employee,
+          Employee_name(15)   TYPE c,
+          Employee_id         TYPE zp1employee_id,
+          Employee_department TYPE zp1employee_department,
+          Employee_joindate   TYPE ZP1EMPLOYEE_Joindate.
+TYPES END OF TY_Employee.
+
+DATA: IT_Employee TYPE TABLE OF TY_Employee.
+
+DATA: WA_Employee TYPE TY_Employee.
+
+WA_Employee-Employee_name = 'Ajay Azad'.
+WA_Employee-Employee_id = '1'.
+WA_Employee-Employee_department = 'Sales'.
+WA_Employee-Employee_joindate = '20220916'.
+APPEND WA_Employee TO IT_Employee.
+
+
+WA_Employee-Employee_name = 'Jeet Yadav'.
+WA_Employee-Employee_id = '2'.
+WA_Employee-Employee_department = 'Sales'.
+WA_Employee-Employee_joindate = '20190806'.
+APPEND WA_Employee TO IT_Employee.
+
+
+WA_Employee-Employee_name = 'Fang Yuan'.
+WA_Employee-Employee_id = '3'.
+WA_Employee-Employee_department = 'IT'.
+WA_Employee-Employee_joindate = '20221016'.
+APPEND WA_Employee TO IT_Employee.
+
+
+WA_Employee-Employee_name = 'Rohit Sharma'.
+WA_Employee-Employee_id = '4'.
+WA_Employee-Employee_department = 'IT'.
+WA_Employee-Employee_joindate = '20241016'.
+APPEND WA_Employee TO IT_Employee.
+
+
+WA_Employee-Employee_name = 'Yashraj Rajput'.
+WA_Employee-Employee_id = '5'.
+WA_Employee-Employee_department = 'Sales'.
+WA_Employee-Employee_joindate = '20121016'.
+APPEND WA_Employee TO IT_Employee.
+
+BREAK-POINT.
