@@ -1,0 +1,80 @@
+*&---------------------------------------------------------------------*
+*& Report ZLEARN_SELECTION2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zlearn_selection2.
+
+
+TYPES: BEGIN OF zso_product,
+         pro_id        TYPE zs_id2,
+         pro_name      TYPE zs_name2,
+         pro_brand     TYPE zs_brand2,
+         pro_unit      TYPE zs_unit2,
+         pro_quantity2 TYPE zs_quantity22,
+       END OF zso_product.
+
+PARAMETERS : p_date TYPE DATUM DEFAULT SY-DATUM,
+ p_user TYPE ERNAM DEFAULT SY-UNAME,
+ p_time TYPE ERZET DEFAULT SY-UZEIT.
+
+DATA: lt_product TYPE TABLE OF zso_product,
+      wa_product TYPE zso_product.
+
+DATA v_id2 TYPE zs_id2.
+
+PARAMETERS : p_id TYPE zs_id2.
+SELECT-OPTIONS : s_id FOR v_id2.
+
+PARAMETERS : p_rad1 TYPE c RADIOBUTTON GROUP r1,
+             p_rad2 TYPE c RADIOBUTTON GROUP r1.
+
+
+IF p_rad1 = 'X'.
+
+  SELECT pro_id,
+         pro_name,
+         pro_brand,
+         pro_unit,
+         pro_quantity2
+    FROM zso_product2
+    INTO TABLE @lt_product
+    WHERE pro_id = @p_id.
+
+if sy-subrc EQ 0.
+  LOOP AT lt_product INTO wa_product.
+    WRITE: / wa_product-pro_id,
+           wa_product-pro_name,
+           wa_product-pro_brand,
+           wa_product-pro_unit,
+           wa_product-pro_quantity2.
+  ENDLOOP.
+endif.
+
+ELSEIF p_rad2 = 'X'.
+
+  SELECT pro_id,
+         pro_name,
+         pro_brand,
+         pro_unit,
+         pro_quantity2
+    FROM zso_product2
+    INTO TABLE @lt_product
+    WHERE pro_id IN @s_id.
+
+ENDIF.
+
+
+IF sy-subrc EQ 0.
+
+  LOOP AT lt_product INTO wa_product.
+    WRITE: / wa_product-pro_id,
+           wa_product-pro_name,
+           wa_product-pro_brand,
+           wa_product-pro_unit,
+           wa_product-pro_quantity2.
+    write:/ 'SUBRC sucess'.
+  ENDLOOP.
+ENDIF.
+
+BREAK-POINT.

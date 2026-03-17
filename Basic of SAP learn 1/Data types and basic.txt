@@ -1,0 +1,34 @@
+*&---------------------------------------------------------------------*
+*& Report ZLEARNLOVE
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZLEARNLOVE.
+write 'hello SAP world'.
+
+*types of data
+DATA LV_name(20) TYPE c.
+DATA LV_namee type ZSO_PRODUCT_NAME.
+
+LV_name = 'HELLO BHAI'.
+LV_namee = 'HELLO BHAI NAMEE'.
+WRITE LV_name.
+WRITE LV_namee.
+
+DATA LV_CONSST(15) TYPE C.
+*CONSTANT
+
+*TEXT ELEMENT
+*also configure text-element setting to do this
+WRITE TEXT-106.
+
+*ithink we cant go back in upward lined (maybe)
+skip 9.
+write '1st line hai'.
+write '2nd line hai'.
+write '3rd line hai'.
+skip TO LINE 16.
+write '4th line hai'.
+write '5th line hai'.
+*skip TO LINE 9.
+write 'bye'.

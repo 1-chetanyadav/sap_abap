@@ -1,0 +1,121 @@
+*&---------------------------------------------------------------------*
+*& Report ZLEARNITWF
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zlearnitwf.
+
+
+**StrUCtureS
+*WAYS TO DECLARE
+*USE TYPE syntax
+TYPES : BEGIN OF ty_product,
+          pro_id(3) TYPE c,
+          pro_name(15)  TYPE c,
+          pro_brand(15) TYPE c,
+          pro_unit      TYPE unit,
+          pro_quantity  TYPE zso_product_quantity.
+TYPES END OF ty_product.
+*prefer way is to use data element
+
+*table type
+***TYPES : tab_pro TYPE TABLE OF ty_product_name.
+*42 line to use as internal table
+
+*internal Table
+
+* it_product_name TYPE TABLE OF ty_product_name
+* gt_product_name TYPE TABLE OF ty_product_name
+* table name can also use but mandit field will come
+
+*lt - gt prefer
+DATA : lt_product TYPE TABLE OF ty_product.
+
+*work area
+DATA: ls_product TYPE ty_product.
+*other names
+*gs, wa
+
+
+*internal table using table type
+**DATA: it_tt_product_name TYPE tab_pro,
+**gt_tt_product_name TYPE ztable_type_product.
+
+ls_product-pro_id = '1'.
+ls_product-pro_name = 'sunfeast'.
+ls_product-pro_brand = 'ITC'.
+ls_product-pro_unit = 'PCS'.
+ls_product-pro_quantity = '100'.
+APPEND ls_product TO lt_product.
+CLEAR ls_product.
+
+ls_product-pro_id = '4'.
+ls_product-pro_name = 'sunfeast'.
+ls_product-pro_brand = 'ITC'.
+ls_product-pro_unit = 'PCS'.
+ls_product-pro_quantity = '101'.
+APPEND ls_product TO lt_product.
+CLEAR ls_product.
+
+ls_product-pro_id = '3'.
+ls_product-pro_name = 'sunfeast'.
+ls_product-pro_brand = 'ITC'.
+ls_product-pro_unit = 'PCS'.
+ls_product-pro_quantity = '10120'.
+APPEND ls_product TO lt_product.
+CLEAR ls_product.
+
+ls_product-pro_id = '6'.
+ls_product-pro_name = 'sunfeast'.
+ls_product-pro_brand = 'ITC'.
+ls_product-pro_unit = 'PCS'.
+ls_product-pro_quantity = '10120'.
+APPEND ls_product TO lt_product.
+CLEAR ls_product.
+
+*Delete
+*DELETE lt_product WHERE pro_quantity = '100'.
+*DELETE lt_product INDEX 3.
+
+
+*wrie and loop
+LOOP AT lt_product INTO ls_product.
+  WRITE:/ ls_product-pro_id,ls_product-pro_name,ls_product-pro_quantity,ls_product-pro_brand.
+ENDLOOP.
+
+
+*modify
+LOOP AT lt_product INTO ls_product.
+  IF ls_product-pro_brand = 'ITC' AND ls_product-pro_quantity = '101'.
+*or can also be used
+    ls_product-pro_brand = 'KFC'.
+    MODIFY lt_product FROM ls_product.
+    CLEAR ls_product.
+  ENDIF.
+ENDLOOP.
+
+sort  lt_product by pro_id ASCENDING.
+read TABLE lt_product INTO ls_product WITH KEY pro_id = '6' BINARY SEARCH.
+  WRITE:/ ls_product-pro_id,ls_product-pro_name,ls_product-pro_quantity,ls_product-pro_brand.
+  CLEAR ls_product.
+
+LOOP AT lt_product INTO ls_product.
+  WRITE:/ ls_product-pro_id,ls_product-pro_name,ls_product-pro_quantity,ls_product-pro_brand.
+ENDLOOP.
+clear ls_product.
+
+DATA lv_number TYPE I.
+
+DESCRIBE TABLE lt_product LINES lv_number.
+write : lv_number.
+
+
+
+
+BREAK-POINT.
+
+
+*pro_namee = 'name th DEC'.
+*pro_name = 'name th DE'.
+
+*WRITE :/ pro_name,pro_namee.
