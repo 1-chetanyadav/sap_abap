@@ -1,0 +1,117 @@
+CLASS zcl_mara_analysis_service DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    TYPES: BEGIN OF ty_data,
+             Material      TYPE mara-matnr,
+             Description   TYPE makt-maktx,
+             MaterialType  TYPE mara-mtart,
+             MatGroup      TYPE mara-matkl,
+             MaterialUnit  TYPE mara-meins,
+             Category_flag TYPE c LENGTH 1,
+             "indicator
+             availability   TYPE z_char_20,
+             Vendor        TYPE z_char_20,
+           END OF ty_data.
+
+    TYPES tt_data TYPE STANDARD TABLE OF ty_data WITH EMPTY KEY.
+    DATA lt_table TYPE tt_data.
+*    TYPES tt_data TYPE STANDARD TABLE OF ty_data WITH EMPTY KEY.
+
+    METHODS process_data
+      IMPORTING
+*        iv_spras TYPE makt-spras
+        iv_mtart TYPE mara-mtart
+      EXPORTING
+        et_data  TYPE tt_data.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+    DATA mo_dao TYPE REF TO zcl_mara_analysis_dao.
+    DATA lv_flag TYPE abap_bool.
+
+ENDCLASS.
+
+
+
+CLASS ZCL_MARA_ANALYSIS_SERVICE IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_MARA_ANALYSIS_SERVICE->PROCESS_DATA
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_MTART                       TYPE        MARA-MTART
+* | [<---] ET_DATA                        TYPE        TT_DATA
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD process_data.
+
+    "DAO >>
+*      DATA lt_table TYPE zcl_mara_analysis_dao=>tt_material.
+*    DATA lv_spras TYPE makt-spras.
+*    DATA lv_mtart TYPE mara-mtart.
+*    CREATE OBJECT mo_dao.
+*    mo_dao->get_data(
+*    EXPORTING
+*      iv_spras = iv_spras
+*      iv_mtart = iv_mtart
+*    IMPORTING
+*        et_data = lt_table ).
+
+
+
+
+
+    SELECT Material,
+      Description,
+      MaterialType,
+      MatGroup,
+      MaterialUnit
+
+      FROM zcds_material_analysis
+      INTO TABLE @lt_table.
+
+
+    DATA lo_badi TYPE REF TO z_badi_mat_check.
+    GET BADI lo_badi.
+    LOOP AT lt_table ASSIGNING FIELD-SYMBOL(<fs>).
+      DATA lv_temp_flag TYPE abap_bool.
+
+      "BADI
+
+      CALL BADI lo_badi->check_material
+        EXPORTING
+          iv_matkl       = <fs>-matgroup
+        CHANGING
+          ev_availability = <fs>-availability
+          ev_vendor      = <fs>-vendor.
+
+      "USER EXIT
+      CALL FUNCTION 'ZTRAIN_USER_EXIT_MATERIAL'
+        EXPORTING
+          iv_matkl = <fs>-matgroup
+        IMPORTING
+          ev_flag  = lv_temp_flag.
+      IF <fs>-MatGroup = '02'.
+        <fs>-Category_flag = 'A'.
+      ELSE.
+        <fs>-Category_flag = 'B'.
+
+      ENDIF.
+      IF lv_temp_flag = abap_true.
+        lv_flag = abap_true.
+      ENDIF.
+
+    ENDLOOP.
+
+    IF lv_flag = abap_true.
+
+      MESSAGE 'Special Category Material Found' TYPE 'I'.
+    ENDIF.
+
+
+
+    et_data = lt_table.
+  ENDMETHOD.
+ENDCLASS.

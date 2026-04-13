@@ -1,0 +1,103 @@
+*&---------------------------------------------------------------------*
+*& Report ZTRAIN_MARA_ANALYSIS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ztrain_mara_analysis.
+
+PARAMETERS:
+  p_spras TYPE makt-spras DEFAULT sy-langu,
+  p_mtart TYPE mara-mtart.
+"p_mtart TYPE mara-mtart OBLIGATORY.
+
+DATA:
+  lo_service TYPE REF TO zcl_mara_analysis_service,
+  lt_data    TYPE zcl_mara_analysis_dao=>tt_material.
+
+START-OF-SELECTION.
+  CREATE OBJECT lo_service.
+
+  lo_service->process_data(
+    EXPORTING
+      iv_mtart = p_mtart
+      iv_spras = p_spras
+     IMPORTING
+       et_data = lt_data ).
+
+  "AVL SECTION
+  DATA lo_alv TYPE REF TO cl_salv_table.
+  DATA lo_columns TYPE REF TO cl_salv_columns_table.
+  DATA lo_column TYPE REF TO cl_salv_column.
+  DATA lo_display TYPE REF TO cl_salv_display_settings.
+  DATA lo_sorts TYPE REF TO cl_salv_sorts.
+
+  TRY.
+      cl_salv_table=>factory(
+      IMPORTING
+        r_salv_table = lo_alv
+       CHANGING
+         t_table = lt_data ).
+
+      IF lt_data IS INITIAL.
+        MESSAGE 'TABLE IS EMPTY' TYPE 'I'.
+        MESSAGE 'No materials found for given selection' TYPE 'I'.
+
+        RETURN.
+
+      ELSE.
+        lo_columns = lo_alv->get_columns( ).
+        lo_columns->set_optimize( abap_true ).
+
+        lo_sorts = lo_alv->get_sorts( ).
+
+
+        lo_column ?= lo_columns->get_column( 'MATNR' ).
+        lo_column->set_long_text( 'Material Number' ).
+        lo_columns->set_column_position( columnname = 'MATNR' position = 2 ).
+
+        lo_column ?= lo_columns->get_column( 'MAKTX' ).
+        lo_columns->set_column_position( columnname = 'MAKTX' position = 1 ).
+
+        lo_columns->set_column_position( columnname = 'MEINS' position = 3 ).
+
+        lo_column ?= lo_columns->get_column( 'MTART' ).
+        "version error >> lo_column->set_emphasized( abap_true ).
+
+        lo_column ?= lo_columns->get_column( 'SPRAS' ).
+        lo_column->set_visible( abap_false ).
+
+        lo_column ?= lo_columns->get_column( 'CATEGORY_FLAG' ).
+        lo_column->set_long_text( 'Category' ).
+        lo_column->set_short_text( 'Category' ).
+
+        lo_sorts->add_sort(
+        columnname = 'MTART'
+        sequence = if_salv_c_sort=>sort_up ).
+
+        lo_sorts->add_sort(
+        columnname = 'MATNR'
+        sequence = if_salv_c_sort=>sort_up ).
+
+        lo_display = lo_alv->get_display_settings( ).
+        lo_display->set_list_header( 'Material Analysis Report' ).
+
+        lo_display->set_striped_pattern( abap_true ).
+        MESSAGE |Total Materials: { lines( lt_data ) }| TYPE 'I'.
+        lo_alv->display( ).
+
+
+      ENDIF.
+
+
+      "exception handler
+    CATCH cx_salv_not_found INTO DATA(lv_notfound).
+      WRITE:/ lv_notfound->get_text( ).
+    CATCH cx_salv_existing INTO DATA(lv_exisit).
+      WRITE:/ lv_exisit->get_text( ).
+
+    CATCH cx_salv_data_error INTO DATA(lv_de).
+      WRITE:/ lv_de->get_text( ).
+    CATCH cx_salv_msg INTO DATA(lv_message).
+      WRITE:/ lv_message->get_text( ).
+
+  ENDTRY.

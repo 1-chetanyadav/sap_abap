@@ -1,0 +1,55 @@
+CLASS zcl_mara_analysis_service DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    TYPES tt_material TYPE zcl_mara_analysis_dao=>tt_material.
+
+    METHODS process_data
+      IMPORTING
+        iv_spras TYPE makt-spras
+        iv_mtart TYPE mara-mtart
+      EXPORTING
+        et_data  TYPE tt_material.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+    DATA mo_dao TYPE REF TO zcl_mara_analysis_dao.
+ENDCLASS.
+
+
+
+CLASS ZCL_MARA_ANALYSIS_SERVICE IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_MARA_ANALYSIS_SERVICE->PROCESS_DATA
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_SPRAS                       TYPE        MAKT-SPRAS
+* | [--->] IV_MTART                       TYPE        MARA-MTART
+* | [<---] ET_DATA                        TYPE        TT_MATERIAL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD process_data.
+    DATA lt_table TYPE zcl_mara_analysis_dao=>tt_material.
+*    DATA lv_spras TYPE makt-spras.
+*    DATA lv_mtart TYPE mara-mtart.
+    CREATE OBJECT mo_dao.
+    mo_dao->get_data(
+    EXPORTING
+      iv_spras = iv_spras
+      iv_mtart = iv_mtart
+    IMPORTING
+        et_data = lt_table ).
+    LOOP AT lt_table ASSIGNING FIELD-SYMBOL(<fs>).
+      IF <fs>-matkl = '001'.
+        <fs>-category_flag = 'A'.
+        ELSE.
+        <fs>-category_flag = 'B'.
+
+      ENDIF.
+
+    ENDLOOP.
+    et_data = lt_table.
+  ENDMETHOD.
+ENDCLASS.

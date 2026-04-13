@@ -1,0 +1,58 @@
+CLASS zcl_mara_analysis_dao DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    TYPES: BEGIN OF ty_mat,
+             matnr TYPE mara-matnr,
+             mtart TYPE mara-mtart,
+             matkl TYPE mara-matkl,
+             meins TYPE mara-meins,
+             spras TYPE makt-spras,
+             maktx TYPE makt-maktx,
+             category_flag(1) TYPE C,
+           END OF ty_mat.
+
+    TYPES tt_material TYPE STANDARD TABLE OF ty_mat WITH EMPTY KEY.
+
+    METHODS get_data
+      IMPORTING
+        iv_spras TYPE makt-spras
+        iv_mtart TYPE mara-mtart OPTIONAL
+      EXPORTING
+        et_data  TYPE tt_material.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ZCL_MARA_ANALYSIS_DAO IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_MARA_ANALYSIS_DAO->GET_DATA
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_SPRAS                       TYPE        MAKT-SPRAS
+* | [--->] IV_MTART                       TYPE        MARA-MTART(optional)
+* | [<---] ET_DATA                        TYPE        TT_MATERIAL
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD get_data.
+    SELECT a~matnr,
+            a~mtart,
+             a~matkl,
+             a~meins,
+
+             b~spras,
+             b~maktx
+      FROM mara AS a
+      INNER JOIN makt AS b
+        ON a~matnr = b~matnr
+        WHERE b~spras = @iv_spras
+        AND ( @iv_mtart IS INITIAL OR a~mtart = @iv_mtart )
+       INTO TABLE @et_data.
+
+
+  ENDMETHOD.
+ENDCLASS.
