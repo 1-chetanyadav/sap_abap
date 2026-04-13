@@ -1,71 +1,65 @@
-# 🚀 SAP ABAP Learning Journey (From Basics to ABAP on HANA)
+📌 Overview
 
-## 📌 Overview
+This repository showcases my hands-on journey in SAP ABAP, focusing on building real-world, end-to-end solutions rather than isolated code examples.
 
-This repository documents my complete journey of learning **SAP ABAP** from fundamentals to modern **ABAP on HANA concepts**.
+It includes practical implementations covering classical ABAP, enhancement techniques, and modern ABAP on HANA concepts.
 
-The goal of this repository is not just to store code, but to:
-- Build strong coding fundamentals
-- Practice real-world SAP scenarios
-- Track progress from beginner to job-ready developer
-- Create a portfolio for interviews
+The primary objective is to demonstrate:
 
----
+Strong understanding of SAP data processing
+Ability to design modular and maintainable ABAP solutions
+Readiness for real-world SAP development environments
+🎯 Learning & Development Approach
 
-## 🎯 Learning Approach
+My approach emphasizes practical problem-solving:
 
-I followed a structured and practical approach:
-
-1. Understand the concept (theory)
-2. Write basic code
-3. Build small real-world programs
-4. Solve exercises independently
-5. Explain logic like in interviews
+Understanding core concepts with SAP standard behavior
+Implementing features using real business scenarios
+Structuring code with modular and reusable design
+Debugging and analyzing system behavior
+Explaining logic in an interview-oriented manner
 
 This ensures:
-- Coding fluency
-- Concept clarity
-- Interview readiness
 
----
+Strong conceptual clarity
+Clean coding practices
+Real interview readiness
+🧠 Technical Coverage
+✅ Core ABAP
+Classical Reports (SE38)
+Internal Tables & Data Processing
+Open SQL (Joins, Aggregations)
+Modularization Techniques
+Debugging and Runtime Analysis
+✅ Intermediate ABAP
+Data Dictionary (SE11)
+Enhancement Techniques:
+User Exits
+BAdI (Custom Implementation)
+Function Modules
+Object-Oriented ABAP:
+Classes, Interfaces, Encapsulation
+🚀 ABAP on HANA
+Advanced Open SQL (New Syntax)
+CDS Views (Data Modeling)
+Code Pushdown Concepts
+Performance-Oriented Development
+💼 Featured Project: MARA Analysis
 
-## 🧠 Topics Covered
+An end-to-end SAP ABAP project designed to simulate real-world material data processing.
 
-### ✅ Core ABAP (Foundation)
-- Reports (SE38)
-- Internal Tables
-- Work Areas
-- SELECT Statements
-- Joins
-- LOOP / READ / APPEND
-- Modularization (FORM routines)
-- Debugging
-
----
-
-### ✅ Intermediate ABAP
-- Data Dictionary (SE11)
-- Enhancements (Implicit & Explicit)
-- BAdI (Basic Implementation)
-- Function Modules
-- OOP ABAP (Classes, Methods, Interfaces)
-
----
-
-### 🚀 ABAP on HANA (In Progress)
-- Open SQL (New Syntax)
-- CDS Views
-- AMDP (Basics)
-- Performance Optimization (Code Pushdown)
-
----
-
-### 🔜 Upcoming Topics
-- OData Services
-- ALV (OO Approach)
-- Advanced OOP Design
-- Real Project Implementation
-
----
-
-## 🧩 Repository Structure
+Key Implementations:
+CDS-based data modeling for efficient data retrieval
+Layered architecture separating data access and business logic
+Enhancement implementation using User Exit and BAdI
+ALV reporting using CL_SALV_TABLE
+OData service development via SEGW with custom DPC_EXT logic
+SmartForm integration for structured output generation
+Business Logic:
+Material categorization based on business rules
+Vendor and availability enrichment using enhancement logic
+🔜 Ongoing Improvements
+Advanced OData features (Filtering, Pagination)
+CDS View layering and annotations
+Performance tuning using SAP tools (ST05, SAT)
+Clean architecture with interface-based design
